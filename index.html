@@ -8,48 +8,101 @@
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { height:100%; overflow:hidden; background:#000; font-family:'Trebuchet MS','Segoe UI',sans-serif; }
   #c { display:block; width:100%; height:100%; touch-action:none; }
-  #hud { position:fixed; top:0; left:0; right:0; display:flex; justify-content:space-between; align-items:center; padding:12px 14px; pointer-events:none; gap:8px; }
-  .chip { background:rgba(10,18,14,0.5); color:#fff; font-size:17px; font-weight:bold; padding:8px 15px;
-          border-radius:24px; backdrop-filter:blur(6px); text-shadow:0 1px 4px rgba(0,0,0,0.5); white-space:nowrap; }
-  #itemSlot { position:fixed; top:10px; left:50%; transform:translateX(-50%); width:62px; height:62px;
-              border-radius:16px; background:rgba(10,18,14,0.55); border:2px solid rgba(255,255,255,0.35);
-              display:flex; align-items:center; justify-content:center; font-size:34px; backdrop-filter:blur(6px);
-              pointer-events:none; }
-  #minimap { position:fixed; top:84px; right:12px; background:rgba(0,0,0,0.32); border-radius:12px; pointer-events:none; }
-  #ctrls { position:fixed; bottom:0; left:0; right:0; display:flex; gap:10px; padding:12px; }
-  .btn { flex:1; height:84px; border:none; border-radius:18px; background:rgba(16,32,22,0.5); color:#fff;
-         font-size:36px; cursor:pointer; user-select:none; -webkit-user-select:none; backdrop-filter:blur(6px);
-         border:1px solid rgba(255,255,255,0.12); }
-  .btn:active { background:rgba(60,110,70,0.65); }
-  #brake { flex:0 0 88px; font-size:15px; font-weight:bold; background:rgba(90,50,35,0.55); }
-  #brake:active { background:rgba(140,80,55,0.75); }
-  #useBtn { position:fixed; bottom:112px; left:50%; transform:translateX(-50%); padding:14px 34px;
+
+  /* HUD — top bar with safe-area awareness */
+  #hud { position:fixed; top:0; left:0; right:0; display:flex; justify-content:space-between;
+         align-items:center; padding:12px 14px; padding-top:calc(12px + env(safe-area-inset-top));
+         pointer-events:none; gap:6px; }
+  .chip { background:rgba(10,18,14,0.6); color:#fff; font-size:clamp(13px,3.5vw,17px);
+          font-weight:bold; padding:7px 12px; border-radius:24px; backdrop-filter:blur(6px);
+          text-shadow:0 1px 4px rgba(0,0,0,0.5); white-space:nowrap; }
+
+  /* Item slot — centred under safe area */
+  #itemSlot { position:fixed; top:calc(10px + env(safe-area-inset-top)); left:50%;
+              transform:translateX(-50%); width:58px; height:58px; border-radius:16px;
+              background:rgba(10,18,14,0.55); border:2px solid rgba(255,255,255,0.35);
+              display:flex; align-items:center; justify-content:center; font-size:32px;
+              backdrop-filter:blur(6px); pointer-events:none; }
+
+  /* Minimap */
+  #minimap { position:fixed; top:84px; right:12px; background:rgba(0,0,0,0.32);
+             border-radius:12px; pointer-events:none; }
+
+  /* Bottom controls — respect home bar */
+  #ctrls { position:fixed; bottom:0; left:0; right:0; display:flex; gap:10px;
+           padding:12px 12px calc(12px + env(safe-area-inset-bottom)); }
+  .btn { flex:1; height:88px; border:none; border-radius:20px;
+         background:rgba(16,32,22,0.55); color:#fff; font-size:40px;
+         cursor:pointer; user-select:none; -webkit-user-select:none;
+         backdrop-filter:blur(8px); border:1.5px solid rgba(255,255,255,0.18);
+         transition:background 0.1s; -webkit-tap-highlight-color:transparent; }
+  .btn:active { background:rgba(60,120,70,0.72); }
+  #brake { flex:0 0 96px; font-size:13px; font-weight:bold; letter-spacing:0.5px;
+           background:rgba(90,45,30,0.6); }
+  #brake:active { background:rgba(150,80,50,0.8); }
+
+  /* USE ITEM button — sits above controls, clears safe area */
+  #useBtn { position:fixed; bottom:calc(116px + env(safe-area-inset-bottom)); left:50%;
+            transform:translateX(-50%); padding:14px 36px;
             font-size:18px; font-weight:bold; border:none; border-radius:30px; color:#2a1f04;
-            background:linear-gradient(180deg,#ffd75e,#eab51c); box-shadow:0 6px 24px rgba(242,193,46,0.5);
-            cursor:pointer; user-select:none; -webkit-user-select:none; }
+            background:linear-gradient(180deg,#ffd75e,#eab51c);
+            box-shadow:0 6px 24px rgba(242,193,46,0.55);
+            cursor:pointer; user-select:none; -webkit-user-select:none;
+            white-space:nowrap; }
   #useBtn:active { transform:translateX(-50%) scale(0.95); }
-  #big { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;
-         font-size:clamp(80px,18vw,150px); font-weight:bold; color:#fff;
+
+  /* Tilt toggle button */
+  #tiltBtn { position:fixed; top:calc(88px + env(safe-area-inset-top)); left:12px;
+             padding:8px 14px; font-size:13px; font-weight:bold; border:none;
+             border-radius:20px; background:rgba(10,18,14,0.55); color:rgba(255,255,255,0.7);
+             backdrop-filter:blur(6px); border:1px solid rgba(255,255,255,0.18);
+             cursor:pointer; user-select:none; -webkit-user-select:none; z-index:5; }
+  #tiltBtn.on { background:rgba(45,143,224,0.55); color:#fff;
+                border-color:rgba(100,180,255,0.5); }
+
+  /* Big countdown text */
+  #big { position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+         pointer-events:none; font-size:clamp(80px,18vw,150px); font-weight:bold; color:#fff;
          text-shadow:0 6px 30px rgba(0,0,0,0.55), 0 0 60px rgba(255,255,255,0.25); }
-  #overlay { position:fixed; inset:0; background:radial-gradient(ellipse at 50% 35%, rgba(20,42,28,0.86), rgba(5,12,8,0.94));
-             display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
-             text-align:center; padding:24px; z-index:10; }
-  #overlay h1 { color:#f2c12e; font-size:clamp(38px,9vw,68px); letter-spacing:2px;
+
+  /* Overlay / menu */
+  #overlay { position:fixed; inset:0;
+             background:radial-gradient(ellipse at 50% 35%, rgba(20,42,28,0.9), rgba(5,12,8,0.96));
+             display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+             gap:16px; text-align:center;
+             padding:calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom));
+             overflow-y:auto; -webkit-overflow-scrolling:touch; z-index:10; }
+  #overlay h1 { color:#f2c12e; font-size:clamp(32px,8vw,68px); letter-spacing:2px; margin-top:8px;
                 text-shadow:0 6px 24px rgba(0,0,0,0.6), 0 0 50px rgba(242,193,46,0.25); }
-  #overlay p { color:#dcebd2; font-size:17px; max-width:470px; line-height:1.7; }
-  #overlay button { padding:18px 56px; font-size:23px; font-weight:bold; border:none; border-radius:16px;
-                    background:linear-gradient(180deg,#ffd75e,#eab51c); color:#3a2a05; cursor:pointer;
-                    box-shadow:0 8px 30px rgba(242,193,46,0.4); }
+  #overlay p { color:#dcebd2; font-size:clamp(13px,3.5vw,17px); max-width:470px; line-height:1.65; }
+  #overlay button { padding:16px 52px; font-size:clamp(18px,5vw,23px); font-weight:bold; border:none;
+                    border-radius:16px; background:linear-gradient(180deg,#ffd75e,#eab51c);
+                    color:#3a2a05; cursor:pointer; box-shadow:0 8px 30px rgba(242,193,46,0.4); }
   #overlay button:active { transform:scale(0.96); }
+
+  /* Character grid — 4 cols desktop, 2 cols on narrow phones */
   #charGrid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; max-width:460px; width:100%; }
   .charBtn { padding:12px 4px 10px; border-radius:14px; border:2px solid rgba(255,255,255,0.25);
-             background:rgba(255,255,255,0.07); color:#fff; font-weight:bold; font-size:14px;
-             cursor:pointer; font-family:inherit; }
-  .charBtn .sw { display:block; width:28px; height:28px; border-radius:50%; margin:0 auto 7px;
+             background:rgba(255,255,255,0.07); color:#fff; font-weight:bold;
+             font-size:clamp(12px,3.2vw,15px); cursor:pointer; font-family:inherit;
+             transition:transform 0.15s, box-shadow 0.15s; }
+  .charBtn .sw { display:block; width:30px; height:30px; border-radius:50%; margin:0 auto 7px;
                  border:2px solid rgba(255,255,255,0.5); }
-  .charBtn.sel { border-color:#f2c12e; background:rgba(242,193,46,0.2);
-                 box-shadow:0 0 16px rgba(242,193,46,0.4); transform:scale(1.05); }
+  .charBtn.sel { border-color:#f2c12e; background:rgba(242,193,46,0.22);
+                 box-shadow:0 0 18px rgba(242,193,46,0.45); transform:scale(1.06); }
   .hidden { display:none !important; }
+
+  @media (max-width:420px) {
+    #charGrid { grid-template-columns:repeat(2,1fr); max-width:280px; }
+    .charBtn .sw { width:34px; height:34px; }
+    #minimap { display:none; }
+  }
+  @media (max-height:600px) and (orientation:landscape) {
+    #ctrls .btn { height:68px; }
+    #overlay { justify-content:flex-start; padding-top:10px; gap:10px; }
+    #overlay h1 { font-size:28px; }
+    #charGrid { grid-template-columns:repeat(4,1fr); }
+  }
 </style>
 </head>
 <body>
@@ -63,6 +116,7 @@
 <canvas id="minimap" width="124" height="100"></canvas>
 <button id="useBtn" class="hidden">USE ITEM</button>
 <div id="big"></div>
+<button id="tiltBtn" class="hidden" aria-label="Toggle tilt steering">&#x1F4F1; Tilt</button>
 <div id="ctrls">
   <button class="btn" id="btnL" aria-label="Steer left">&#8592;</button>
   <button class="btn" id="brake" aria-label="Brake">BRAKE</button>
@@ -1098,9 +1152,10 @@ var CHARS=[
   {name:'SK',       hex:'#35E0A0', body:0x2E3138, accent:0x35E0A0, hub:0x35E0A0, helmet:'#35E0A0', helmetStripe:'#2E3138', shirt:0x2E3138},
   {name:'Thomas',   hex:'#33B45C', body:0x33B45C, accent:0xFFFFFF, hub:0xFFFFFF, helmet:'#F5F5F5', helmetStripe:'#33B45C', shirt:0x33B45C}
 ];
-var selectedChar=0, charMeshes=[], raceCols=['#F06AA8','#2BBFB0','#E0382C','#2D7FD6'], raceNames=[];
+var selectedChar=2, charMeshes=[], raceCols=['#F06AA8','#2BBFB0','#E0382C','#2D7FD6'], raceNames=[];
 
 /* character select grid */
+var charBtnEls=[];
 (function(){
   var grid=document.getElementById('charGrid');
   CHARS.forEach(function(ch, i){
@@ -1109,13 +1164,47 @@ var selectedChar=0, charMeshes=[], raceCols=['#F06AA8','#2BBFB0','#E0382C','#2D7
     b.innerHTML='<span class="sw" style="background:'+ch.hex+'"></span>'+ch.name;
     b.addEventListener('click', function(){
       selectedChar=i;
-      var btns=grid.querySelectorAll('.charBtn');
-      for(var j=0;j<btns.length;j++) btns[j].classList.remove('sel');
+      charBtnEls.forEach(function(el){ el.classList.remove('sel'); });
       b.classList.add('sel');
     });
     grid.appendChild(b);
+    charBtnEls.push(b);
   });
+  /* scroll Gary into view on mobile after a short delay */
+  setTimeout(function(){
+    charBtnEls[selectedChar].scrollIntoView({block:'nearest', behavior:'smooth'});
+  }, 150);
 })();
+
+/* tilt steering */
+var tiltOn=false, tiltBase=null, tiltBtn=document.getElementById('tiltBtn');
+var isTouchDevice=('ontouchstart' in window || navigator.maxTouchPoints>0);
+if(isTouchDevice && window.DeviceOrientationEvent){
+  tiltBtn.classList.remove('hidden');
+}
+tiltBtn.addEventListener('click', function(){
+  tiltOn=!tiltOn;
+  tiltBtn.classList.toggle('on', tiltOn);
+  tiltBtn.textContent = tiltOn ? '\uD83D\uDCF1 Tilt ON' : '\uD83D\uDCF1 Tilt';
+  if(tiltOn){
+    tiltBase=null;
+    if(typeof DeviceOrientationEvent!=='undefined' && typeof DeviceOrientationEvent.requestPermission==='function'){
+      DeviceOrientationEvent.requestPermission().then(function(s){
+        if(s!=='granted'){ tiltOn=false; tiltBtn.classList.remove('on'); }
+      }).catch(function(){ tiltOn=false; tiltBtn.classList.remove('on'); });
+    }
+  }
+});
+window.addEventListener('deviceorientation', function(e){
+  if(!tiltOn || !running) return;
+  var g=e.gamma||0;
+  if(tiltBase===null) tiltBase=g;
+  var diff=g-tiltBase;
+  var dead=4;
+  if(Math.abs(diff)<dead){ keys['ArrowLeft']=false; keys['ArrowRight']=false; return; }
+  if(diff<-dead){ keys['ArrowLeft']=true; keys['ArrowRight']=false; }
+  else { keys['ArrowLeft']=false; keys['ArrowRight']=true; }
+});
 
 /* floating name tags */
 function nameTexture(text, gold){
