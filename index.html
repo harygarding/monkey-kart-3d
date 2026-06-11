@@ -1143,16 +1143,16 @@ var ITEMS=['banana','coconut','boost'];
 var ITEM_ICON={banana:'\uD83C\uDF4C', coconut:'\uD83E\uDD65', boost:'\u26A1'};
 var karts, player, bananas, boosts, projectiles=[], keys={}, countdown, finishOrder, frame=0, running=false;
 var CHARS=[
-  {name:'Adelaide', hex:'#F06AA8', body:0xF06AA8, accent:0xFFFFFF, hub:0xFFFFFF, helmet:'#FFFFFF', helmetStripe:'#F06AA8', shirt:0xF06AA8},
-  {name:'Anna',     hex:'#2BBFB0', body:0x2BBFB0, accent:0xFFD34D, hub:0xFFD34D, helmet:'#FFD34D', helmetStripe:'#2BBFB0', shirt:0x2BBFB0},
-  {name:'Gary',     hex:'#E0382C', body:0xE0382C, accent:0xFFD34D, hub:0xFFD34D, helmet:'#2D8FE0', helmetStripe:'#FFD34D', shirt:0xE0382C},
-  {name:'Keith',    hex:'#2D7FD6', body:0x2D7FD6, accent:0xFFFFFF, hub:0xE8E8E8, helmet:'#E0382C', helmetStripe:'#FFFFFF', shirt:0x2D7FD6},
-  {name:'Lauren',   hex:'#8F84E8', body:0x8F84E8, accent:0xFFD34D, hub:0x2a2a31, helmet:'#FFD34D', helmetStripe:'#8F84E8', shirt:0x8F84E8},
-  {name:'Rebecca',  hex:'#F28C28', body:0xF28C28, accent:0xFFFFFF, hub:0x2a2a31, helmet:'#2D8FE0', helmetStripe:'#FFFFFF', shirt:0xF28C28},
-  {name:'SK',       hex:'#35E0A0', body:0x2E3138, accent:0x35E0A0, hub:0x35E0A0, helmet:'#35E0A0', helmetStripe:'#2E3138', shirt:0x2E3138},
-  {name:'Thomas',   hex:'#33B45C', body:0x33B45C, accent:0xFFFFFF, hub:0xFFFFFF, helmet:'#F5F5F5', helmetStripe:'#33B45C', shirt:0x33B45C}
+  {name:'Gary',       hex:'#E0382C', body:0xE0382C, accent:0xFFD34D, hub:0xFFD34D, helmet:'#2D8FE0', helmetStripe:'#FFD34D', shirt:0xE0382C},
+  {name:'Larry',      hex:'#2BBFB0', body:0x2BBFB0, accent:0xFFD34D, hub:0xFFD34D, helmet:'#FFD34D', helmetStripe:'#2BBFB0', shirt:0x2BBFB0},
+  {name:'Nickey',     hex:'#F06AA8', body:0xF06AA8, accent:0xFFFFFF, hub:0xFFFFFF, helmet:'#FFFFFF', helmetStripe:'#F06AA8', shirt:0xF06AA8},
+  {name:'Daz',        hex:'#2D7FD6', body:0x2D7FD6, accent:0xFFFFFF, hub:0xE8E8E8, helmet:'#E0382C', helmetStripe:'#FFFFFF', shirt:0x2D7FD6},
+  {name:'Jimbo',      hex:'#8F84E8', body:0x8F84E8, accent:0xFFD34D, hub:0x2a2a31, helmet:'#FFD34D', helmetStripe:'#8F84E8', shirt:0x8F84E8},
+  {name:'Richardson', hex:'#F28C28', body:0xF28C28, accent:0xFFFFFF, hub:0x2a2a31, helmet:'#2D8FE0', helmetStripe:'#FFFFFF', shirt:0xF28C28},
+  {name:'Mikey',      hex:'#35E0A0', body:0x2E3138, accent:0x35E0A0, hub:0x35E0A0, helmet:'#35E0A0', helmetStripe:'#2E3138', shirt:0x2E3138},
+  {name:'Gavinator',  hex:'#33B45C', body:0x33B45C, accent:0xFFFFFF, hub:0xFFFFFF, helmet:'#F5F5F5', helmetStripe:'#33B45C', shirt:0x33B45C}
 ];
-var selectedChar=2, charMeshes=[], raceCols=['#F06AA8','#2BBFB0','#E0382C','#2D7FD6'], raceNames=[];
+var selectedChar=0, charMeshes=[], raceCols=['#F06AA8','#2BBFB0','#E0382C','#2D7FD6'], raceNames=[];
 
 /* character select grid */
 var charBtnEls=[];
