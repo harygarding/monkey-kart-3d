@@ -1276,7 +1276,7 @@ function reset(){
     karts.push({
       x:pos[0], z:pos[1], y:hAt(startI), a:tangent(startI), va:tangent(startI),
       speed:0, idx:startI, lap:1, mesh:meshes[k0],
-      ai:k0>0, spin:0, boost:0, base:0.545+k0*0.018+Math.random()*0.02,
+      ai:k0>0, spin:0, boost:0, base:0.36+k0*0.012+Math.random()*0.015,
       done:false, finishPos:0, roll:0, bob:k0,
       item:null, itemTimer:0, coins:0, name:raceNames[k0]
     });
@@ -1429,16 +1429,16 @@ function step(){
     }
     var res=nearestIdx(k.x,k.z,k.idx);
     var ni=res[0], dist=res[1];
-    var max=(k.ai?k.base:0.6) + Math.min(k.coins,10)*0.005;
+    var max=(k.ai?k.base:0.42) + Math.min(k.coins,10)*0.004;
     if(dist>TRACK_W/2)max*=0.45;
-    if(k.boost>0){max=0.9;k.boost--;}
+    if(k.boost>0){max=0.62;k.boost--;}
     if(k.spin>0){
       k.spin--; k.va+=0.35; k.speed*=0.93;
     } else {
-      k.speed += (brake? -0.035 : 0.012);
+      k.speed += (brake? -0.03 : 0.009);
       if(k.speed>max)k.speed=Math.max(max,k.speed*0.94);
       if(k.speed<0)k.speed=0;
-      var sAmt=steer*0.052*Math.min(1,k.speed/0.32);
+      var sAmt=steer*0.065*Math.min(1,k.speed/0.22);
       k.a+=sAmt;
       k.va=k.a;
       k.roll += (steer*0.12 - k.roll)*0.15;
